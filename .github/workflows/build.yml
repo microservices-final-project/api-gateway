@@ -12,7 +12,7 @@ jobs:
   call-template:
     uses: microservices-final-project/ci-templates/.github/workflows/build.yml@main
     with:
-      image_name: ${GITHUB_REPOSITORY##*/}
+      image_name: ${{ github.repository }}
       image_tag: ${{ github.ref_name }}
       dockerfile_path: ./Dockerfile
       context: .
