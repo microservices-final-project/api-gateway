@@ -1,0 +1,14 @@
+name: Obtener nombre del repo
+
+on:
+  push:
+
+jobs:
+  mostrar-nombre-repo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mostrar nombre del repo completo (owner/repo)
+        run: echo "${GITHUB_REPOSITORY}"
+
+      - name: Extraer solo el nombre del repo
+        run: echo "${GITHUB_REPOSITORY##*/}"
