@@ -1,4 +1,3 @@
-
 server:
   servlet:
     context-path: /
@@ -15,9 +14,6 @@ spring:
     - dev
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: false
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_UNIQUE
       globalcors:
@@ -40,30 +36,44 @@ spring:
         uri: lb://ORDER-SERVICE
         predicates:
         - Path=/order-service/**
+        filters:
+        - RewritePath=/order-service/(?<remaining>.*), /order-service/$\{remaining}
       - id: PAYMENT-SERVICE
         uri: lb://PAYMENT-SERVICE
         predicates:
         - Path=/payment-service/**
+        filters:
+        - RewritePath=/payment-service/(?<remaining>.*), /payment-service/$\{remaining}
       - id: PRODUCT-SERVICE
         uri: lb://PRODUCT-SERVICE
         predicates:
         - Path=/product-service/**
+        filters:
+        - RewritePath=/product-service/(?<remaining>.*), /product-service/$\{remaining}
       - id: SHIPPING-SERVICE
         uri: lb://SHIPPING-SERVICE
         predicates:
         - Path=/shipping-service/**
+        filters:
+        - RewritePath=/shipping-service/(?<remaining>.*), /shipping-service/$\{remaining}
       - id: USER-SERVICE
         uri: lb://USER-SERVICE
         predicates:
         - Path=/user-service/**
+        filters:
+        - RewritePath=/user-service/(?<remaining>.*), /user-service/$\{remaining}
       - id: FAVOURITE-SERVICE
         uri: lb://FAVOURITE-SERVICE
         predicates:
         - Path=/favourite-service/**
+        filters:
+        - RewritePath=/favourite-service/(?<remaining>.*), /favourite-service/$\{remaining}
       - id: PROXY-CLIENT
         uri: lb://PROXY-CLIENT
         predicates:
         - Path=/app/**
+        filters:
+        - RewritePath=/app/(?<remaining>.*), /app/$\{remaining}
 
 resilience4j:
   circuitbreaker:
