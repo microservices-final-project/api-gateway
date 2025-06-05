@@ -15,6 +15,9 @@ spring:
     - dev
   cloud:
     gateway:
+      discovery:
+        locator:
+          enabled: false
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_UNIQUE
       globalcors:
@@ -83,7 +86,3 @@ management:
   endpoint:
     health:
       show-details: always
-
-eureka:
-  instance:
-    prefer-ip-address: true
