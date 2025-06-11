@@ -11,5 +11,3 @@ jobs:
     with:
       release_branch: main
       node_version: '22'
-    secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
