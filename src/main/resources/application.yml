@@ -11,7 +11,10 @@ spring:
     name: API-GATEWAY
   profiles:
     active:
-    - dev
+      - dev
+  redis:
+    host: redis
+    port: 6379
   cloud:
     gateway:
       default-filters:
@@ -19,12 +22,12 @@ spring:
       globalcors:
         add-to-simple-url-handler-mapping: true
         cors-configurations:
-          '[/**]':
+          "[/**]":
             allowed-origin-patterns: "*"
             allowed-headers: "*"
             exposed-headers: "*"
             allow-credentials: true
-            allowed-methods: 
+            allowed-methods:
               - GET
               - POST
               - PUT
@@ -32,34 +35,46 @@ spring:
               - PATCH
               - OPTIONS
       routes:
-      - id: ORDER-SERVICE
-        uri: lb://ORDER-SERVICE
-        predicates:
-        - Path=/order-service/**
-      - id: PAYMENT-SERVICE
-        uri: lb://PAYMENT-SERVICE
-        predicates:
-        - Path=/payment-service/**
-      - id: PRODUCT-SERVICE
-        uri: lb://PRODUCT-SERVICE
-        predicates:
-        - Path=/product-service/**
-      - id: SHIPPING-SERVICE
-        uri: lb://SHIPPING-SERVICE
-        predicates:
-        - Path=/shipping-service/**
-      - id: USER-SERVICE
-        uri: lb://USER-SERVICE
-        predicates:
-        - Path=/user-service/**
-      - id: FAVOURITE-SERVICE
-        uri: lb://FAVOURITE-SERVICE
-        predicates:
-        - Path=/favourite-service/**
-      - id: PROXY-CLIENT
-        uri: lb://PROXY-CLIENT
-        predicates:
-        - Path=/app/**
+        - id: ORDER-SERVICE
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/order-service/**
+        - id: PAYMENT-SERVICE
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/payment-service/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 2
+                redis-rate-limiter.burstCapacity: 2
+                key-resolver: "#{@ipKeyResolver}"
+        - id: PRODUCT-SERVICE
+          uri: lb://PRODUCT-SERVICE
+          predicates:
+            - Path=/product-service/**
+        - id: SHIPPING-SERVICE
+          uri: lb://SHIPPING-SERVICE
+          predicates:
+            - Path=/shipping-service/**
+        - id: USER-SERVICE
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/**
+        - id: FAVOURITE-SERVICE
+          uri: lb://FAVOURITE-SERVICE
+          predicates:
+            - Path=/favourite-service/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 4
+                redis-rate-limiter.burstCapacity: 4
+                key-resolver: "#{@ipKeyResolver}"
+        - id: PROXY-CLIENT
+          uri: lb://PROXY-CLIENT
+          predicates:
+            - Path=/app/**
 
 resilience4j:
   circuitbreaker:
