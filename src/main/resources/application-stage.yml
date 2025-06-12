@@ -25,4 +25,6 @@ logging:
             rest: DEBUG
             jpa: DEBUG
             orm: DEBUG
-
+    org.springframework.cloud.gateway.filter.ratelimit: DEBUG
+    org.springframework.data.redis: DEBUG
+    reactor.netty.http.client: DEBUG
